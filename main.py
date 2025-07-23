@@ -1,11 +1,11 @@
 import argparse
 from benchmark.classical import run_classical_grid
+from benchmark.box_naive import run_box_amplify_grid
 
 def parse_args():
     p = argparse.ArgumentParser(
         description="Benchmark linear‑regression approaches"
     )
-    p.add_argument("--mode", choices=["classical"], default="classical")
     p.add_argument("--dims", type=int, nargs="+", default=[10, 100, 500])
     p.add_argument("--models", nargs="+",
                    default=["ols", "ridge", "lasso", "sgd"])
@@ -13,6 +13,10 @@ def parse_args():
     p.add_argument("--corr", type=float, default=0.0)
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--out", default="results/classical_bench.csv")
+    p.add_argument("--mode", choices=["classical", "box"], default="classical")
+    p.add_argument("--max_iter", type=int, default=40)
+    p.add_argument("--num_solves", type=int, default=1)
+    p.add_argument("--timeout_ms", type=int, default=500)
     return p.parse_args()
 
 
@@ -28,8 +32,21 @@ def main():
             models=args.models,
             outfile=args.out,
         )
+    elif args.mode == "box":
+        run_box_amplify_grid(
+            dims=args.dims,
+            noise=args.noise,
+            corr=args.corr,
+            seed=args.seed,
+            max_iter=args.max_iter,
+            num_solves=args.num_solves,
+            timeout_ms=args.timeout_ms,
+            outfile=args.out,
+        )
     else:
         raise NotImplementedError(f"mode {args.mode}")
+
+
 
 
 if __name__ == "__main__":
