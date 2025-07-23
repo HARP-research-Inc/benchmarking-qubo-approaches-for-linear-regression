@@ -76,8 +76,8 @@ def _build_correlated_features(n, d, rho, rng):
     if not (0.0 <= rho < 1.0):
         raise ValueError("feature_corr must be in [0, 1).")
 
-    Z0 = rng.standard_normal((n, d))          # independent noise
-    z_common = rng.standard_normal((n, 1))    # shared across features
+    Z0 = rng.standard_normal((n, d))          
+    z_common = rng.standard_normal((n, 1))   
 
     return np.sqrt(1.0 - rho) * Z0 + np.sqrt(rho) * z_common
 

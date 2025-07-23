@@ -1,7 +1,6 @@
 import argparse
 from benchmark.classical import run_classical_grid
 
-
 def parse_args():
     p = argparse.ArgumentParser(
         description="Benchmark linear‑regression approaches"
