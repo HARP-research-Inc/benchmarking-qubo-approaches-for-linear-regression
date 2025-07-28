@@ -15,7 +15,7 @@ load_dotenv()
 def solve_box_naive_amplify(
     A,
     b,
-    beta=0.5,
+    beta=0.2,
     epsilon=1e-6,
     max_iter=50,
     num_solves=1,
@@ -46,10 +46,10 @@ def solve_box_naive_amplify(
         q1 = gen.array("Binary", d)
         q2 = gen.array("Binary", d)
         w = c + L * (-2 * q1 + q2)
-        energy = 0.5 * (w @ (A @ w)) - b @ w
 
         # ---------------- compile (CPU) ----------------
         t0 = time.perf_counter()
+        energy = 0.5 * (w @ (A @ w)) - b @ w
         model = energy
         encode_time += time.perf_counter() - t0
 
