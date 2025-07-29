@@ -31,6 +31,7 @@ pip install -e .
 # Fixstars Amplify (free community tier)
 export AE_KEY="YOUR_FIXSTARS_API_TOKEN"
 (or create .env file)
+```
 
 ## Example Runs
 ```
