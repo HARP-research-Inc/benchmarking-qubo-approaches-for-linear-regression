@@ -52,6 +52,6 @@ python main.py --mode potok          \
 ```
 
 ## References
-P. Date & T. Potok, Adiabatic Quantum Linear Regression, Sci. Rep. 11, 21905 (2021).
+P. Date & T. Potok, Adiabatic Quantum Linear Regression, Sci. Rep. 11, 21905 (2021).  
 Fixstars Amplify
 
