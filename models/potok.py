@@ -5,7 +5,8 @@ import numpy as np
 from amplify import VariableGenerator, Model, FixstarsClient, solve, set_seed
 from datetime import timedelta
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv  
+from models.common_amplify import safe_solve
 
 load_dotenv()
 
@@ -79,7 +80,7 @@ def solve_linreg_potok_amplify(
     encode_time = time.perf_counter() - t0_enc
 
     t_start = time.perf_counter()
-    result = solve(model, client, num_solves=num_solves)
+    result = safe_solve(model, client, num_solves=num_solves)
     t_end   = time.perf_counter()
     if not result:
         raise RuntimeError("Amplify returned no solutions")

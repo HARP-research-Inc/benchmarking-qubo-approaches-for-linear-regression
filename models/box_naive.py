@@ -4,6 +4,7 @@ from amplify import VariableGenerator, FixstarsClient, solve, set_seed
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+from models.common_amplify import safe_solve
 
 # Load .env file
 load_dotenv()
@@ -55,7 +56,7 @@ def solve_box_naive_amplify(
 
         # --------------- solve (GPU) -------------------
         wall_start = time.perf_counter()
-        result = solve(model, client, num_solves=num_solves)
+        result = safe_solve(model, client, num_solves=num_solves)
         wall_end = time.perf_counter()
         wall_time += wall_end - wall_start
         if not result:

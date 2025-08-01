@@ -4,6 +4,7 @@ from amplify import VariableGenerator, Model, FixstarsClient, solve, set_seed
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+from models.common_amplify import safe_solve
 
 load_dotenv()
 
@@ -80,22 +81,21 @@ def solve_box_opt_amplify(
     for it in range(1, max_iter + 1):
         # Linear coefficients depend on c: coeff = A c - b
         coeff = A @ c - b
-
         t0 = time.perf_counter()
-        lin_blk = 0
-        # Build linear block sum_i coeff[i] * dvec[i]
-        for i in range(d):
-            if coeff[i] != 0.0:
-                lin_blk += coeff[i] * dvec[i]
 
-        # Finla polynomial (ignore constant term—it doesn't affect argmin)
-        poly = (L * lin_blk) + (L * L) * quad_blk
+        # mask-out exact zeros so we don’t generate useless Poly terms
+        nz      = coeff != 0.0
+        lin_blk = np.dot(coeff[nz], dvec[nz])      # same as (coeff[nz] * dvec[nz]).sum()
+
+        # final polynomial  (constant term is irrelevant to argmin)
+        poly  = L * lin_blk + (L * L) * quad_blk
         model = Model(poly)
+
         encode_time += time.perf_counter() - t0
 
         # Solve
         w_start = time.perf_counter()
-        result = solve(model, client, num_solves=num_solves)
+        result = safe_solve(model, client, num_solves=num_solves)
         w_end = time.perf_counter()
         wall_time += (w_end - w_start)
 
