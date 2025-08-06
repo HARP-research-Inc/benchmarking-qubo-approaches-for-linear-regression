@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPS=25
+REPS=40
 DIMS=(4 8 16 32 64 128 256)
 NOISE_SET=(0.01 0.05)
 CORR_SET=(0.0 0.8)

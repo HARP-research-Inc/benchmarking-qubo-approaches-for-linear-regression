@@ -2,7 +2,7 @@
 import csv, json, re, sqlite3, sys, datetime as dt
 from pathlib import Path
 
-DB_PATH  = Path("results/bench.db")
+DB_PATH  = Path("results/bench_new.db")
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS runs (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

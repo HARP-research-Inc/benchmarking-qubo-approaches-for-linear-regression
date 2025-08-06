@@ -84,7 +84,9 @@ def solve_box_opt_amplify(
         t0 = time.perf_counter()
 
         # mask-out exact zeros so we don’t generate useless Poly terms
-        nz      = coeff != 0.0
+        tol = 1e-12 * (np.linalg.norm(A, ord=np.inf) * np.linalg.norm(c, ord=np.inf) + np.linalg.norm(b, ord=np.inf))
+        nz = np.abs(coeff) > tol
+
         lin_blk = np.dot(coeff[nz], dvec[nz])      # same as (coeff[nz] * dvec[nz]).sum()
 
         # final polynomial  (constant term is irrelevant to argmin)
