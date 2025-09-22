@@ -33,7 +33,7 @@ def _build_amplify_primitives(A):
         # j>=i to avoid duplicating terms; Amplify Poly handles duplicates fine though
         for j in range(i, d):
             term = Ai[j] * di * dvec[j]
-            quad_poly += term if i == j else 2 * term  # because we're summing over all i,j in 0.5 * ...
+            quad_poly += term if i == j else 2 * term  
     quad_blk = 0.5 * quad_poly
     return q1, q2, dvec, quad_blk
 
@@ -49,7 +49,7 @@ def solve_box_opt_amplify(
     seed=0,
 ):
     """
-    Optimized box algorithm using only Amplify (no PyQUBO).
+    Optimized box algorithm using only Amplify.
     Encoding cost per iteration is O(d), quadratic part is prebuilt.
 
     Returns:
@@ -80,9 +80,8 @@ def solve_box_opt_amplify(
 
     for it in range(1, max_iter + 1):
         # Linear coefficients depend on c: coeff = A c - b
-        coeff = A @ c - b
         t0 = time.perf_counter()
-
+        coeff = A @ c - b
         # mask-out exact zeros so we don’t generate useless Poly terms
         tol = 1e-12 * (np.linalg.norm(A, ord=np.inf) * np.linalg.norm(c, ord=np.inf) + np.linalg.norm(b, ord=np.inf))
         nz = np.abs(coeff) > tol
