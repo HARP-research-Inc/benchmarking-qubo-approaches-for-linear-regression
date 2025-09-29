@@ -78,6 +78,7 @@ def solve_box_opt_amplify(
     client.parameters.timeout = timedelta(milliseconds=timeout_ms)
     set_seed(seed)
 
+    E_c = 0.5 * c @ (A @ c) - b @ c
     for it in range(1, max_iter + 1):
         # Linear coefficients depend on c: coeff = A c - b
         t0 = time.perf_counter()
@@ -109,19 +110,16 @@ def solve_box_opt_amplify(
         E_val = sol.objective
 
         # Decode w
-        q1_sol = q1.evaluate(sol.values)
-        q2_sol = q2.evaluate(sol.values)
-        w_new  = c + L * (-2 * q1_sol + q2_sol)
-        E_true = 0.5 * w_new @ (A @ w_new) - b @ w_new
+        E_true = E_c + E_val
 
-        if E_true < best_E:
-            c = w_new
-            best_E = E_true 
-        else:
+        if E_val < 0:                        # translate
+            q1_sol = q1.evaluate(result.best.values)
+            q2_sol = q2.evaluate(result.best.values)
+            s_star = (-2 * q1_sol + q2_sol)
+            c = c + L * s_star
+            E_c = E_true                   # update cached center energy
+        else:                               # contract
             L *= beta
-
-        if L < epsilon:
-            break
 
     exact = np.linalg.solve(A, b)
     err   = np.linalg.norm(c - exact)
